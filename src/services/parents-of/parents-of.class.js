@@ -11,15 +11,15 @@ class Service {
 
 
     return new Promise((resolve, reject) => {
-      let query = `select  id from tree where tree.node_name = '${node}'`;
-      console.log("mohammed", query)
+      let query = `select  id,parent_id from tree where tree.node_name = '${node}'`;
+  
       seq.query(query, {  type: seq.QueryTypes.SELECT }).then((data) => {
        
-        if(data.length>0){
+        if(data.length>0 &&data[0].parent_id!=null){
         let id = data[0].id;
       
         let secondQuery = `select distinct a.node_name from tree_heirarchy.tree a inner join tree_heirarchy.tree  b on a.id = b.parent_id where b.id <= '${id}'`;
-        console.log("mohammed2", secondQuery)
+       
         let secondResult = {};
         seq.query(secondQuery, { raw: true, type: seq.QueryTypes.SELECT }).then((result) => {
           secondResult = result;
@@ -27,10 +27,10 @@ class Service {
           for (let i=0;i<secondResult.length;i++){
             responseData.push(secondResult[i].node_name);
           }
-          console.log("www",responseData);
-          let final = [responseData];
-          console.log("sdaas",resolve(final));
-          // consol.log("final",final)
+          
+          let final = responseData;
+          resolve(final);
+          
           return final;
         });
       }

@@ -15,7 +15,7 @@ module.exports = {
 
   after: {
     all: [],
-    find: [processResponse()],
+    find: [],
     get: [],
     create: [],
     update: [],
